@@ -24,7 +24,8 @@ export default function TicketDetail() {
   const updateMutation = useMutation({
     mutationFn: (data) => ticketService.update(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries(["ticket", id]);
+      queryClient.invalidateQueries({ queryKey: ["ticket", id] });
+      queryClient.invalidateQueries({ queryKey: ["tickets"] });
     },
   });
 
@@ -261,9 +262,7 @@ export default function TicketDetail() {
                 className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-odpp-blue focus:border-odpp-blue sm:text-sm"
               >
                 <option value="new">New</option>
-                <option value="open">Open</option>
                 <option value="in_progress">In Progress</option>
-                <option value="pending">Pending</option>
                 <option value="resolved">Resolved</option>
                 <option value="closed">Closed</option>
               </select>

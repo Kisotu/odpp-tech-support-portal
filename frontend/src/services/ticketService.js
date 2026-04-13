@@ -158,7 +158,7 @@ const ticketService = {
    * @returns {Promise} - Updated ticket
    */
   updateStatus: async (ticketId, status) => {
-    const response = await api.put(`/tickets/${ticketId}/status`, { status });
+    const response = await api.post(`/tickets/${ticketId}/status`, { status });
     return transformTicket(response.data.data);
   },
 

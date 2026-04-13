@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 import { authApi } from "../services/api";
 
@@ -98,13 +98,8 @@ export default function Login() {
             </button>
           </div>
 
-          <div className="text-center">
-            <Link
-              to="/forgot-password"
-              className="text-sm text-odpp-blue hover:underline"
-            >
-              Forgot your password?
-            </Link>
+          <div className="text-center text-sm text-gray-500">
+            Contact ICT support if you cannot access your account.
           </div>
         </form>
 

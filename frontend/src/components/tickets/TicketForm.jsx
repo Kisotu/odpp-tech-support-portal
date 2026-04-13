@@ -16,6 +16,7 @@ const categoryOptions = [
   { value: "network", label: "Network" },
   { value: "printer", label: "Printer" },
   { value: "email", label: "Email" },
+  { value: "account", label: "Account" },
   { value: "other", label: "Other" },
 ];
 

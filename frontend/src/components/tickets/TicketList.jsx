@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import TicketFilters from './TicketFilters';
-import Badge, { StatusBadge, PriorityBadge } from '../common/Badge';
+import { StatusBadge, PriorityBadge } from '../common/Badge';
 import Spinner from '../common/Spinner';
 import ticketService from '../../services/ticketService';
 
@@ -14,7 +14,7 @@ export default function TicketList() {
     category: '',
     search: '',
     page: 1,
-    limit: 10,
+    per_page: 15,
   });
 
   const { data, isLoading, error } = useQuery({
@@ -29,6 +29,17 @@ export default function TicketList() {
 
   const handlePageChange = (page) => {
     setFilters((prev) => ({ ...prev, page }));
+  };
+
+  const handleResetFilters = () => {
+    setFilters({
+      status: '',
+      priority: '',
+      category: '',
+      search: '',
+      page: 1,
+      per_page: 15,
+    });
   };
 
   const handleRowClick = (ticket) => {
@@ -115,6 +126,7 @@ export default function TicketList() {
       <TicketFilters
         filters={filters}
         onFilterChange={handleFilterChange}
+        onReset={handleResetFilters}
       />
 
       <div className="bg-white rounded-lg shadow overflow-hidden">

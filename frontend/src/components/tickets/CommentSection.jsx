@@ -36,7 +36,7 @@ export default function CommentSection({ ticketId }) {
     if (!newComment.trim()) return;
 
     addCommentMutation.mutate({
-      content: newComment.trim(),
+      comment: newComment.trim(),
       is_internal: isInternal,
     });
   };
@@ -76,13 +76,13 @@ export default function CommentSection({ ticketId }) {
                   <div className="flex-shrink-0">
                     <div className="h-8 w-8 rounded-full bg-odpp-blue flex items-center justify-center">
                       <span className="text-white text-sm font-medium">
-                        {comment.author?.name?.charAt(0).toUpperCase() || "U"}
+                        {comment.user?.name?.charAt(0).toUpperCase() || "U"}
                       </span>
                     </div>
                   </div>
                   <div>
                     <p className="text-sm font-medium text-gray-900">
-                      {comment.author?.name || "Unknown User"}
+                      {comment.user?.name || "Unknown User"}
                     </p>
                     <p className="text-xs text-gray-500">
                       {comment.created_at &&
@@ -107,7 +107,7 @@ export default function CommentSection({ ticketId }) {
               </div>
               <div className="ml-10">
                 <p className="text-sm text-gray-700 whitespace-pre-wrap">
-                  {comment.content}
+                  {comment.comment}
                 </p>
               </div>
             </div>
@@ -148,7 +148,7 @@ export default function CommentSection({ ticketId }) {
             htmlFor="is-internal"
             className="ml-2 block text-sm text-gray-700"
           >
-            Mark as internal note (only visible to staff)
+            Mark as internal note (only visible to ICT/Admin)
           </label>
         </div>
 
