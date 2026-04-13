@@ -6,7 +6,7 @@ A localized Help Desk system for the Office of the Director of Public Prosecutio
 
 - ✅ **Phase 1: Foundation** - Complete
 - ✅ **Phase 2: Core Ticket System** - Complete
-- 🚧 **Phase 3: ICT Features** - Planned
+- ✅ **Phase 3: ICT Features** - Complete
 - ⏳ **Phase 4: Reporting & Knowledge Base** - Planned
 - ⏳ **Phase 5: Polish & Deployment** - Planned
 
@@ -95,6 +95,15 @@ npm run dev
 - ✅ Dashboard statistics API
 - ✅ Reusable UI components
 
+### Phase 3 (Complete)
+- ✅ Ticket assignment system with modal UI
+- ✅ ICT Dashboard with queue view
+- ✅ Status workflow transitions with validation
+- ✅ Ticket reopen functionality
+- ✅ User management API
+- ✅ Role-based navigation
+- ✅ Role-based routing with guards
+
 ## Tech Stack
 
 **Backend:**
@@ -125,9 +134,18 @@ npm run dev
 - `DELETE /api/tickets/{id}` - Delete ticket
 - `POST /api/tickets/{id}/assign` - Assign ticket
 - `POST /api/tickets/{id}/status` - Update status
+- `POST /api/tickets/{id}/reopen` - Reopen ticket
 - `GET /api/tickets/{id}/comments` - Get comments
 - `POST /api/tickets/{id}/comments` - Add comment
 - `POST /api/tickets/{id}/attachments` - Upload file
+
+### Users
+- `GET /api/users` - List users (ict/admin only)
+- `POST /api/users` - Create user (admin only)
+- `GET /api/users/{id}` - Get user
+- `PUT /api/users/{id}` - Update user (admin only)
+- `DELETE /api/users/{id}` - Deactivate user (admin only)
+- `GET /api/users/role/ict-officers` - List ICT officers
 
 ### Dashboard
 - `GET /api/dashboard/stats` - Get statistics
