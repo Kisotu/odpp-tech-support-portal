@@ -7,6 +7,10 @@ import ICTDashboard from "./pages/ICTDashboard";
 import Tickets from "./pages/Tickets";
 import TicketView from "./pages/TicketView";
 import CreateTicket from "./pages/CreateTicket";
+import Reports from "./pages/Reports";
+import KnowledgeBase from "./pages/KnowledgeBase";
+import KnowledgeBaseView from "./pages/KnowledgeBaseView";
+import KnowledgeBaseEditor from "./pages/KnowledgeBaseEditor";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -85,15 +89,55 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route
-            path="/tickets/:id"
-            element={
-              <ProtectedRoute>
-                <TicketView />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="/" element={<HomeRedirect />} />
+<Route
+          path="/tickets/:id"
+          element={
+            <ProtectedRoute>
+              <TicketView />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/reports"
+          element={
+            <RoleRoute allowedRoles={["ict_officer", "admin"]}>
+              <Reports />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/knowledge-base"
+          element={
+            <ProtectedRoute>
+              <KnowledgeBase />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/knowledge-base/new"
+          element={
+            <RoleRoute allowedRoles={["ict_officer", "admin"]}>
+              <KnowledgeBaseEditor />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/knowledge-base/:id"
+          element={
+            <ProtectedRoute>
+              <KnowledgeBaseView />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/knowledge-base/:id/edit"
+          element={
+            <RoleRoute allowedRoles={["ict_officer", "admin"]}>
+              <KnowledgeBaseEditor />
+            </RoleRoute>
+          }
+        />
+        <Route path="/" element={<HomeRedirect />} />
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>

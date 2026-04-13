@@ -25,10 +25,15 @@ export default function Navigation() {
       return [
         ...baseNav,
         { name: "ICT Dashboard", href: "/ict-dashboard" },
+        { name: "Reports", href: "/reports" },
+        { name: "Knowledge Base", href: "/knowledge-base" },
       ];
     }
 
-    return baseNav;
+    return [
+      ...baseNav,
+      { name: "Knowledge Base", href: "/knowledge-base" },
+    ];
   };
 
   const navigation = getNavigation();
