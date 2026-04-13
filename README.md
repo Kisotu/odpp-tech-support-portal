@@ -7,7 +7,7 @@ A localized Help Desk system for the Office of the Director of Public Prosecutio
 - ✅ **Phase 1: Foundation** - Complete
 - ✅ **Phase 2: Core Ticket System** - Complete
 - ✅ **Phase 3: ICT Features** - Complete
-- ⏳ **Phase 4: Reporting & Knowledge Base** - Planned
+- ✅ **Phase 4: Reporting & Knowledge Base** - Complete
 - ⏳ **Phase 5: Polish & Deployment** - Planned
 
 ## Project Structure
@@ -104,6 +104,14 @@ npm run dev
 - ✅ Role-based navigation
 - ✅ Role-based routing with guards
 
+### Phase 4 (Complete)
+- ✅ Reporting API with resolution times, SLA compliance, workload metrics
+- ✅ Reports page with charts (Recharts) for data visualization
+- ✅ Knowledge Base CRUD with article management
+- ✅ Article search and category filtering
+- ✅ CSV export for ticket data
+- ✅ Role-based access for report and knowledge base features
+
 ## Tech Stack
 
 **Backend:**
@@ -118,6 +126,7 @@ npm run dev
 - React Router
 - TanStack Query
 - Zustand
+- Recharts (Charts & Data Visualization)
 
 ## API Endpoints
 
@@ -151,6 +160,21 @@ npm run dev
 - `GET /api/dashboard/stats` - Get statistics
 - `GET /api/dashboard/trends` - Get trends
 - `GET /api/dashboard/performance` - Get performance metrics
+
+### Reports (ict/admin only)
+- `GET /api/reports/resolution-times` - Resolution time by category
+- `GET /api/reports/by-category` - Ticket counts by category/status
+- `GET /api/reports/sla-compliance` - SLA compliance metrics
+- `GET /api/reports/officer-workload` - ICT officer performance
+- `GET /api/reports/export-csv` - Export tickets to CSV
+
+### Knowledge Base
+- `GET /api/knowledge-base` - List articles (with search/filter)
+- `POST /api/knowledge-base` - Create article (ict/admin only)
+- `GET /api/knowledge-base/categories` - Get categories
+- `GET /api/knowledge-base/{id}` - Get article
+- `PUT /api/knowledge-base/{id}` - Update article (ict/admin only)
+- `DELETE /api/knowledge-base/{id}` - Delete article (admin only)
 
 ## License
 
