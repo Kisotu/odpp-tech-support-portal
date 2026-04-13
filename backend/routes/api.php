@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\Api\KnowledgeBaseController;
+use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\TicketController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
@@ -58,15 +60,34 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/{ticketId}/attachments/{attachmentId}', [TicketController::class, 'deleteAttachment']);
   });
 
-  // User routes (admin/ict only)
-  Route::prefix('users')->group(function () {
-    Route::get('/', [UserController::class, 'index']);
-    Route::post('/', [UserController::class, 'store']);
-    Route::get('/{id}', [UserController::class, 'show']);
-    Route::put('/{id}', [UserController::class, 'update']);
-    Route::delete('/{id}', [UserController::class, 'destroy']);
+// User routes (admin/ict only)
+    Route::prefix('users')->group(function () {
+        Route::get('/', [UserController::class, 'index']);
+        Route::post('/', [UserController::class, 'store']);
+        Route::get('/{id}', [UserController::class, 'show']);
+        Route::put('/{id}', [UserController::class, 'update']);
+        Route::delete('/{id}', [UserController::class, 'destroy']);
 
-    // Special endpoints
-    Route::get('/role/ict-officers', [UserController::class, 'ictOfficers']);
-  });
+        // Special endpoints
+        Route::get('/role/ict-officers', [UserController::class, 'ictOfficers']);
+    });
+
+    // Report routes (ict/admin only)
+    Route::prefix('reports')->group(function () {
+        Route::get('/resolution-times', [ReportController::class, 'resolutionTimes']);
+        Route::get('/by-category', [ReportController::class, 'byCategory']);
+        Route::get('/sla-compliance', [ReportController::class, 'slaCompliance']);
+        Route::get('/officer-workload', [ReportController::class, 'officerWorkload']);
+        Route::get('/export-csv', [ReportController::class, 'exportCsv']);
+    });
+
+    // Knowledge Base routes
+    Route::prefix('knowledge-base')->group(function () {
+        Route::get('/', [KnowledgeBaseController::class, 'index']);
+        Route::post('/', [KnowledgeBaseController::class, 'store']);
+        Route::get('/categories', [KnowledgeBaseController::class, 'categories']);
+        Route::get('/{id}', [KnowledgeBaseController::class, 'show']);
+        Route::put('/{id}', [KnowledgeBaseController::class, 'update']);
+        Route::delete('/{id}', [KnowledgeBaseController::class, 'destroy']);
+    });
 });
