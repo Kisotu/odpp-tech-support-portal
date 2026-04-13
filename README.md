@@ -5,8 +5,8 @@ A localized Help Desk system for the Office of the Director of Public Prosecutio
 ## Project Status
 
 - ✅ **Phase 1: Foundation** - Complete
-- 🚧 **Phase 2: Core Ticket System** - In Progress
-- ⏳ **Phase 3: ICT Features** - Planned
+- ✅ **Phase 2: Core Ticket System** - Complete
+- 🚧 **Phase 3: ICT Features** - Planned
 - ⏳ **Phase 4: Reporting & Knowledge Base** - Planned
 - ⏳ **Phase 5: Polish & Deployment** - Planned
 
@@ -14,10 +14,10 @@ A localized Help Desk system for the Office of the Director of Public Prosecutio
 
 ```
 .
-├── backend/     # Laravel API
-├── frontend/    # React + Vite frontend
-├── docs/        # Documentation
-└── PRD.md       # Product Requirements Document
+├── backend/           # Laravel API
+├── frontend/          # React + Vite frontend
+├── docs/              # Documentation
+└── PRD.md             # Product Requirements Document
 ```
 
 ## Quick Start
@@ -76,6 +76,25 @@ npm run dev
 | ICT Officer | ict1@odpp.go.ke | password |
 | Staff | prosecutor@odpp.go.ke | password |
 
+## Features
+
+### Phase 1 (Complete)
+- ✅ User authentication (login/logout)
+- ✅ Role-based access (staff, ict_officer, admin)
+- ✅ Token-based API authentication
+- ✅ Protected routes
+- ✅ Dashboard with statistics
+
+### Phase 2 (Complete)
+- ✅ Ticket CRUD operations
+- ✅ Ticket creation form with validation
+- ✅ Ticket list with filters (status, category, priority, search)
+- ✅ Ticket detail view with comments
+- ✅ File attachment upload
+- ✅ Role-based ticket visibility
+- ✅ Dashboard statistics API
+- ✅ Reusable UI components
+
 ## Tech Stack
 
 **Backend:**
@@ -91,7 +110,29 @@ npm run dev
 - TanStack Query
 - Zustand
 
+## API Endpoints
 
+### Authentication
+- `POST /api/auth/login` - User login
+- `POST /api/auth/logout` - User logout
+- `GET /api/auth/user` - Get current user
+
+### Tickets
+- `GET /api/tickets` - List tickets (with filters)
+- `POST /api/tickets` - Create ticket
+- `GET /api/tickets/{id}` - Get single ticket
+- `PUT /api/tickets/{id}` - Update ticket
+- `DELETE /api/tickets/{id}` - Delete ticket
+- `POST /api/tickets/{id}/assign` - Assign ticket
+- `POST /api/tickets/{id}/status` - Update status
+- `GET /api/tickets/{id}/comments` - Get comments
+- `POST /api/tickets/{id}/comments` - Add comment
+- `POST /api/tickets/{id}/attachments` - Upload file
+
+### Dashboard
+- `GET /api/dashboard/stats` - Get statistics
+- `GET /api/dashboard/trends` - Get trends
+- `GET /api/dashboard/performance` - Get performance metrics
 
 ## License
 
