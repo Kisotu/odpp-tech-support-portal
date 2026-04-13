@@ -1,4 +1,4 @@
-import api from './api';
+import api from "./api";
 
 const ticketService = {
   /**
@@ -9,8 +9,12 @@ const ticketService = {
   getAll: async (params = {}) => {
     const queryParams = new URLSearchParams();
 
-    Object.keys(params).forEach(key => {
-      if (params[key] !== '' && params[key] !== null && params[key] !== undefined) {
+    Object.keys(params).forEach((key) => {
+      if (
+        params[key] !== "" &&
+        params[key] !== null &&
+        params[key] !== undefined
+      ) {
         queryParams.append(key, params[key]);
       }
     });
@@ -35,7 +39,7 @@ const ticketService = {
    * @returns {Promise} - Created ticket
    */
   create: async (data) => {
-    const response = await api.post('/tickets', data);
+    const response = await api.post("/tickets", data);
     return response.data;
   },
 
@@ -88,11 +92,15 @@ const ticketService = {
    * @returns {Promise} - Upload result
    */
   uploadAttachment: async (ticketId, formData) => {
-    const response = await api.post(`/tickets/${ticketId}/attachments`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
+    const response = await api.post(
+      `/tickets/${ticketId}/attachments`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       },
-    });
+    );
     return response.data;
   },
 
@@ -103,7 +111,9 @@ const ticketService = {
    * @returns {Promise}
    */
   deleteAttachment: async (ticketId, attachmentId) => {
-    const response = await api.delete(`/tickets/${ticketId}/attachments/${attachmentId}`);
+    const response = await api.delete(
+      `/tickets/${ticketId}/attachments/${attachmentId}`,
+    );
     return response.data;
   },
 
@@ -114,7 +124,9 @@ const ticketService = {
    * @returns {Promise} - Updated ticket
    */
   assign: async (ticketId, userId) => {
-    const response = await api.put(`/tickets/${ticketId}/assign`, { assigned_to: userId });
+    const response = await api.post(`/tickets/${ticketId}/assign`, {
+      assigned_to: userId,
+    });
     return response.data;
   },
 
@@ -134,9 +146,10 @@ const ticketService = {
    * @returns {Promise} - Statistics data
    */
   getStats: async () => {
-    const response = await api.get('/tickets/stats');
+    const response = await api.get("/dashboard/stats");
     return response.data;
   },
 };
 
 export default ticketService;
+export { ticketService };
