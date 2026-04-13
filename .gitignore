@@ -27,6 +27,6 @@ backend/storage/framework/views/*
 backend/storage/logs/*
 backend/database/*.sqlite
 
-# Project-local planning/setup artifacts
-PRD.md
-setup.sh
+# Project-local planning/setup artifacts (keep these tracked)
+# PRD.md - Product requirements document (should be tracked)
+# setup.sh - Development setup script (should be tracked)
