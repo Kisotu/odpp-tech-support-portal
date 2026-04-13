@@ -1,9 +1,10 @@
-import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { useMutation } from '@tanstack/react-query';
-import TicketForm from '../components/tickets/TicketForm';
-import Button from '../components/common/Button';
-import ticketService from '../services/ticketService';
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import Navigation from "../components/common/Navigation";
+import TicketForm from "../components/tickets/TicketForm";
+import Button from "../components/common/Button";
+import ticketService from "../services/ticketService";
 
 export default function CreateTicket() {
   const navigate = useNavigate();
@@ -13,13 +14,13 @@ export default function CreateTicket() {
     mutationFn: (data) => ticketService.create(data),
     onSuccess: (data) => {
       navigate(`/tickets/${data.id}`, {
-        state: { message: 'Ticket created successfully!' }
+        state: { message: "Ticket created successfully!" },
       });
     },
     onError: (err) => {
       setError(
         err.response?.data?.message ||
-        'Failed to create ticket. Please try again.'
+          "Failed to create ticket. Please try again.",
       );
     },
   });
@@ -31,6 +32,7 @@ export default function CreateTicket() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <Navigation />
       {/* Header */}
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
@@ -47,7 +49,7 @@ export default function CreateTicket() {
                 Create New Ticket
               </h1>
             </div>
-            <Button variant="outline" onClick={() => navigate('/tickets')}>
+            <Button variant="outline" onClick={() => navigate("/tickets")}>
               Cancel
             </Button>
           </div>
@@ -137,18 +139,12 @@ export default function CreateTicket() {
               Need Help?
             </h3>
             <ul className="text-sm text-gray-600 space-y-1">
-              <li>
-                • Provide a clear, descriptive title for your issue
-              </li>
+              <li>• Provide a clear, descriptive title for your issue</li>
               <li>
                 • Include error messages, screenshots, or steps to reproduce
               </li>
-              <li>
-                • Specify your location for on-site support requests
-              </li>
-              <li>
-                • Set appropriate priority based on urgency
-              </li>
+              <li>• Specify your location for on-site support requests</li>
+              <li>• Set appropriate priority based on urgency</li>
             </ul>
           </div>
         </div>
