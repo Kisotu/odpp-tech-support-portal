@@ -1,14 +1,25 @@
 import api from "./api";
 
+/**
+ * Transform ticket data from backend format to frontend format
+ * Backend uses 'user', frontend expects 'requester'
+ */
+const transformTicket = (ticket) => {
+  if (!ticket) return null;
+  return {
+    ...ticket,
+    requester: ticket.user, // Map 'user' to 'requester'
+  };
+};
+
 const ticketService = {
   /**
    * Get all tickets with optional filters
    * @param {Object} params - Query parameters
-   * @returns {Promise} - Tickets data with pagination
+   * @returns {Promise} - Tickets data with pagination { tickets, pagination }
    */
   getAll: async (params = {}) => {
     const queryParams = new URLSearchParams();
-
     Object.keys(params).forEach((key) => {
       if (
         params[key] !== "" &&
@@ -20,7 +31,17 @@ const ticketService = {
     });
 
     const response = await api.get(`/tickets?${queryParams.toString()}`);
-    return response.data;
+    const { data, meta } = response.data;
+
+    return {
+      tickets: (data || []).map(transformTicket),
+      pagination: {
+        currentPage: meta?.current_page || 1,
+        totalPages: meta?.last_page || 1,
+        totalItems: meta?.total || 0,
+        perPage: meta?.per_page || 15,
+      },
+    };
   },
 
   /**
@@ -30,7 +51,7 @@ const ticketService = {
    */
   getById: async (id) => {
     const response = await api.get(`/tickets/${id}`);
-    return response.data;
+    return transformTicket(response.data.data);
   },
 
   /**
@@ -40,7 +61,7 @@ const ticketService = {
    */
   create: async (data) => {
     const response = await api.post("/tickets", data);
-    return response.data;
+    return transformTicket(response.data.data);
   },
 
   /**
@@ -51,7 +72,7 @@ const ticketService = {
    */
   update: async (id, data) => {
     const response = await api.put(`/tickets/${id}`, data);
-    return response.data;
+    return transformTicket(response.data.data);
   },
 
   /**
@@ -72,7 +93,7 @@ const ticketService = {
    */
   addComment: async (ticketId, comment) => {
     const response = await api.post(`/tickets/${ticketId}/comments`, comment);
-    return response.data;
+    return response.data.data;
   },
 
   /**
@@ -82,7 +103,7 @@ const ticketService = {
    */
   getComments: async (ticketId) => {
     const response = await api.get(`/tickets/${ticketId}/comments`);
-    return response.data;
+    return response.data.data;
   },
 
   /**
@@ -101,7 +122,7 @@ const ticketService = {
         },
       },
     );
-    return response.data;
+    return response.data.data;
   },
 
   /**
@@ -127,7 +148,7 @@ const ticketService = {
     const response = await api.post(`/tickets/${ticketId}/assign`, {
       assigned_to: userId,
     });
-    return response.data;
+    return transformTicket(response.data.data);
   },
 
   /**
@@ -138,7 +159,7 @@ const ticketService = {
    */
   updateStatus: async (ticketId, status) => {
     const response = await api.put(`/tickets/${ticketId}/status`, { status });
-    return response.data;
+    return transformTicket(response.data.data);
   },
 
   /**

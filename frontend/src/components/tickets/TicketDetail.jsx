@@ -137,7 +137,7 @@ export default function TicketDetail() {
                           />
                         </svg>
                         <span className="text-sm text-gray-700">
-                          {attachment.name}
+                          {attachment.file_name}
                         </span>
                       </div>
                       <a
