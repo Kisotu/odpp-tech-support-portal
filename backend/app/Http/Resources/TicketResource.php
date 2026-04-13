@@ -52,7 +52,7 @@ class TicketResource extends JsonResource
                 'id' => $attachment->id,
                 'file_name' => $attachment->file_name,
                 'file_size' => $attachment->file_size,
-                'file_type' => $attachment->file_type,
+                'mime_type' => $attachment->mime_type,
                 'url' => asset('storage/' . $attachment->file_path),
             ])),
         ];

@@ -25,7 +25,7 @@ class TicketUpdateRequest extends FormRequest
         return [
             'title' => ['sometimes', 'required', 'string', 'max:255'],
             'description' => ['sometimes', 'required', 'string', 'min:10'],
-            'category' => ['sometimes', 'required', 'string', Rule::in(['hardware', 'software', 'network', 'printer', 'email', 'other'])],
+            'category' => ['sometimes', 'required', 'string', Rule::in(['hardware', 'software', 'network', 'printer', 'email', 'account', 'other'])],
             'priority' => ['sometimes', 'required', 'string', Rule::in(['low', 'medium', 'high', 'critical'])],
             'status' => ['sometimes', 'required', 'string', Rule::in(['new', 'in_progress', 'resolved', 'closed'])],
             'assigned_to' => ['sometimes', 'nullable', 'integer', 'exists:users,id'],

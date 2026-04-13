@@ -24,7 +24,7 @@ class TicketStoreRequest extends FormRequest
         return [
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string', 'min:10'],
-            'category' => ['required', 'string', 'in:hardware,software,network,printer,email,other'],
+            'category' => ['required', 'string', 'in:hardware,software,network,printer,email,account,other'],
             'priority' => ['required', 'string', 'in:low,medium,high,critical'],
             'assigned_to' => ['nullable', 'integer', 'exists:users,id'],
         ];
