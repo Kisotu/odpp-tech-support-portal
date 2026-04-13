@@ -443,72 +443,177 @@ class TicketController extends Controller
         ]);
     }
 
-    /**
-     * Update ticket status.
-     */
-    public function updateStatus(Request $request, $id)
-    {
-        $ticket = Ticket::findOrFail($id);
-        $user = $request->user();
+/**
+ * Update ticket status.
+ */
+public function updateStatus(Request $request, $id)
+{
+    $ticket = Ticket::findOrFail($id);
+    $user = $request->user();
 
-        // Authorization check
-        $canUpdate = $this->canUpdateTicket($user, $ticket);
-        if (!$canUpdate) {
-            return response()->json(["message" => "Unauthorized"], 403);
-        }
-
-        $validated = $request->validate([
-            "status" => "required|in:new,in_progress,resolved,closed",
-            "resolution_notes" => "sometimes|string",
-        ]);
-
-        $oldStatus = $ticket->status;
-        $updateData = ["status" => $validated["status"]];
-
-        if (isset($validated["resolution_notes"])) {
-            $updateData["resolution_notes"] = $validated["resolution_notes"];
-        }
-
-        if ($validated["status"] === "resolved") {
-            $updateData["resolved_at"] = now();
-        }
-
-        if ($validated["status"] === "closed") {
-            $updateData["closed_at"] = now();
-        }
-
-        $ticket->update($updateData);
-
-        AuditLog::create([
-            "ticket_id" => $ticket->id,
-            "user_id" => $user->id,
-            "action" => "status_changed",
-            "field" => "status",
-            "old_value" => $oldStatus,
-            "new_value" => $validated["status"],
-        ]);
-
-        $ticket->load(["user", "assignedTo"]);
-
-        if ($ticket->user) {
-            $this->sendTicketEmail(
-                $ticket->user->email,
-                "Ticket Status Updated: {$ticket->ticket_number}",
-                [
-                    "Your ticket status has been updated.",
-                    "Ticket Number: {$ticket->ticket_number}",
-                    "Title: {$ticket->title}",
-                    "Old Status: {$oldStatus}",
-                    "New Status: {$ticket->status}",
-                ],
-            );
-        }
-
-        return response()->json([
-            "message" => "Status updated successfully",
-            "data" => new TicketResource($ticket),
-        ]);
+    // Authorization check
+    $canUpdate = $this->canUpdateTicket($user, $ticket);
+    if (!$canUpdate) {
+        return response()->json(["message" => "Unauthorized"], 403);
     }
+
+    $validated = $request->validate([
+        "status" => "required|in:new,in_progress,resolved,closed",
+        "resolution_notes" => "sometimes|string",
+    ]);
+
+    $oldStatus = $ticket->status;
+    $newStatus = $validated["status"];
+
+    // Validate status transition
+    $transitionError = $this->validateStatusTransition($oldStatus, $newStatus);
+    if ($transitionError) {
+        return response()->json(["message" => $transitionError], 422);
+    }
+
+    $updateData = ["status" => $newStatus];
+
+    if (isset($validated["resolution_notes"])) {
+        $updateData["resolution_notes"] = $validated["resolution_notes"];
+    }
+
+    if ($newStatus === "resolved") {
+        $updateData["resolved_at"] = now();
+    }
+
+    if ($newStatus === "closed") {
+        $updateData["closed_at"] = now();
+    }
+
+    // Clear resolved_at if moving back to in_progress
+    if ($oldStatus === "resolved" && $newStatus === "in_progress") {
+        $updateData["resolved_at"] = null;
+    }
+
+    $ticket->update($updateData);
+
+    AuditLog::create([
+        "ticket_id" => $ticket->id,
+        "user_id" => $user->id,
+        "action" => "status_changed",
+        "field" => "status",
+        "old_value" => $oldStatus,
+        "new_value" => $newStatus,
+    ]);
+
+    $ticket->load(["user", "assignedTo"]);
+
+    if ($ticket->user) {
+        $this->sendTicketEmail(
+            $ticket->user->email,
+            "Ticket Status Updated: {$ticket->ticket_number}",
+            [
+                "Your ticket status has been updated.",
+                "Ticket Number: {$ticket->ticket_number}",
+                "Title: {$ticket->title}",
+                "Old Status: {$oldStatus}",
+                "New Status: {$ticket->status}",
+            ],
+        );
+    }
+
+    return response()->json([
+        "message" => "Status updated successfully",
+        "data" => new TicketResource($ticket),
+    ]);
+}
+
+/**
+ * Reopen a closed or resolved ticket.
+ */
+public function reopen(Request $request, $id)
+{
+    $ticket = Ticket::findOrFail($id);
+    $user = $request->user();
+
+    // Authorization: Only admin, ict_officer, or ticket owner can reopen
+    if ($user->role === "staff" && $ticket->user_id !== $user->id) {
+        return response()->json(["message" => "Unauthorized"], 403);
+    }
+
+    // Can only reopen resolved or closed tickets
+    if (!in_array($ticket->status, ["resolved", "closed"])) {
+        return response()->json([
+            "message" => "Only resolved or closed tickets can be reopened",
+        ], 422);
+    }
+
+    $oldStatus = $ticket->status;
+    $ticket->update([
+        "status" => "in_progress",
+        "resolved_at" => null,
+        "closed_at" => null,
+    ]);
+
+    AuditLog::create([
+        "ticket_id" => $ticket->id,
+        "user_id" => $user->id,
+        "action" => "reopened",
+        "field" => "status",
+        "old_value" => $oldStatus,
+        "new_value" => "in_progress",
+    ]);
+
+    if ($ticket->user) {
+        $this->sendTicketEmail(
+            $ticket->user->email,
+            "Ticket Reopened: {$ticket->ticket_number}",
+            [
+                "Your ticket has been reopened.",
+                "Ticket Number: {$ticket->ticket_number}",
+                "Title: {$ticket->title}",
+                "Previous Status: {$oldStatus}",
+                "New Status: in_progress",
+            ],
+        );
+    }
+
+    $ticket->load(["user", "assignedTo"]);
+
+    return response()->json([
+        "message" => "Ticket reopened successfully",
+        "data" => new TicketResource($ticket),
+    ]);
+}
+
+/**
+ * Validate status transition rules.
+ * Returns error message if invalid, null if valid.
+ */
+private function validateStatusTransition($oldStatus, $newStatus)
+{
+    // Same status is always valid (no change)
+    if ($oldStatus === $newStatus) {
+        return null;
+    }
+
+    // Define valid transitions
+    $validTransitions = [
+        "new" => ["in_progress"],
+        "in_progress" => ["resolved", "closed"],
+        "resolved" => ["closed", "in_progress"], // Can close or reopen
+        "closed" => ["in_progress"], // Can only reopen
+    ];
+
+    // Admin can bypass transition rules
+    // (handled at controller level if needed)
+
+    if (!isset($validTransitions[$oldStatus])) {
+        return "Invalid current status";
+    }
+
+    if (!in_array($newStatus, $validTransitions[$oldStatus])) {
+        $allowed = implode(", ", $validTransitions[$oldStatus]);
+        return "Cannot transition from {$oldStatus} to {$newStatus}. Allowed transitions: {$allowed}";
+    }
+
+    return null;
+}
 
     /**
      * Helper method to save attachment.

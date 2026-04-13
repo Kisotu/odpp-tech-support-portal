@@ -2,11 +2,6 @@ import { Link, useLocation } from "react-router-dom";
 import { useAuthStore } from "../../store/authStore";
 import Button from "./Button";
 
-const navigation = [
-  { name: "Dashboard", href: "/dashboard" },
-  { name: "Tickets", href: "/tickets" },
-];
-
 export default function Navigation() {
   const location = useLocation();
   const user = useAuthStore((state) => state.user);
@@ -19,6 +14,24 @@ export default function Navigation() {
   const isActive = (path) => {
     return location.pathname === path || location.pathname.startsWith(path + "/");
   };
+
+  const getNavigation = () => {
+    const baseNav = [
+      { name: "Dashboard", href: "/dashboard" },
+      { name: "Tickets", href: "/tickets" },
+    ];
+
+    if (user?.role === "ict_officer" || user?.role === "admin") {
+      return [
+        ...baseNav,
+        { name: "ICT Dashboard", href: "/ict-dashboard" },
+      ];
+    }
+
+    return baseNav;
+  };
+
+  const navigation = getNavigation();
 
   return (
     <header className="bg-white shadow-sm border-b border-gray-200">

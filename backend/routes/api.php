@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\TicketController;
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -43,16 +44,29 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/{id}', [TicketController::class, 'update']);
         Route::delete('/{id}', [TicketController::class, 'destroy']);
 
-        // Ticket actions
-        Route::post('/{id}/assign', [TicketController::class, 'assign']);
-        Route::post('/{id}/status', [TicketController::class, 'updateStatus']);
+// Ticket actions
+    Route::post('/{id}/assign', [TicketController::class, 'assign']);
+    Route::post('/{id}/status', [TicketController::class, 'updateStatus']);
+    Route::post('/{id}/reopen', [TicketController::class, 'reopen']);
 
-        // Comments
+    // Comments
         Route::get('/{id}/comments', [TicketController::class, 'getComments']);
         Route::post('/{id}/comments', [TicketController::class, 'addComment']);
 
-        // Attachments
-        Route::post('/{id}/attachments', [TicketController::class, 'uploadAttachment']);
-        Route::delete('/{ticketId}/attachments/{attachmentId}', [TicketController::class, 'deleteAttachment']);
-    });
+// Attachments
+    Route::post('/{id}/attachments', [TicketController::class, 'uploadAttachment']);
+    Route::delete('/{ticketId}/attachments/{attachmentId}', [TicketController::class, 'deleteAttachment']);
+  });
+
+  // User routes (admin/ict only)
+  Route::prefix('users')->group(function () {
+    Route::get('/', [UserController::class, 'index']);
+    Route::post('/', [UserController::class, 'store']);
+    Route::get('/{id}', [UserController::class, 'show']);
+    Route::put('/{id}', [UserController::class, 'update']);
+    Route::delete('/{id}', [UserController::class, 'destroy']);
+
+    // Special endpoints
+    Route::get('/role/ict-officers', [UserController::class, 'ictOfficers']);
+  });
 });

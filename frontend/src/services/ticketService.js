@@ -151,21 +151,31 @@ const ticketService = {
     return transformTicket(response.data.data);
   },
 
-  /**
-   * Update ticket status
-   * @param {string|number} ticketId - Ticket ID
-   * @param {string} status - New status
-   * @returns {Promise} - Updated ticket
-   */
+/**
+ * Update ticket status
+ * @param {string|number} ticketId - Ticket ID
+ * @param {string} status - New status
+ * @returns {Promise} - Updated ticket
+ */
   updateStatus: async (ticketId, status) => {
     const response = await api.post(`/tickets/${ticketId}/status`, { status });
     return transformTicket(response.data.data);
   },
 
   /**
-   * Get ticket statistics
-   * @returns {Promise} - Statistics data
-   */
+ * Reopen a closed or resolved ticket
+ * @param {string|number} ticketId - Ticket ID
+ * @returns {Promise} - Reopened ticket
+ */
+  reopen: async (ticketId) => {
+    const response = await api.post(`/tickets/${ticketId}/reopen`);
+    return transformTicket(response.data.data);
+  },
+
+  /**
+ * Get ticket statistics
+ * @returns {Promise} - Statistics data
+ */
   getStats: async () => {
     const response = await api.get("/dashboard/stats");
     return response.data;

@@ -115,24 +115,35 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              {/* Info Box */}
-              <div className="bg-white rounded-lg shadow p-6">
-                <h2 className="text-xl font-semibold mb-4">
-                  Welcome to ODPP Tech Support Portal
-                </h2>
-                <p className="text-gray-600">
-                  {user?.role === "staff"
-                    ? "Submit and track your IT support requests from this portal. Click 'Create New Ticket' to report an issue."
-                    : "Manage and resolve IT support tickets efficiently. Check the unassigned queue to pick up new tickets."}
+{/* Info Box */}
+          <div className="bg-white rounded-lg shadow p-6">
+            <h2 className="text-xl font-semibold mb-4">
+              Welcome to ODPP Tech Support Portal
+            </h2>
+            <p className="text-gray-600">
+              {user?.role === "staff"
+                ? "Submit and track your IT support requests from this portal. Click 'Create New Ticket' to report an issue."
+                : "Manage and resolve IT support tickets efficiently. Check the unassigned queue to pick up new tickets."}
+            </p>
+            {(user?.role === "ict_officer" || user?.role === "admin") && (
+              <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <p className="text-sm text-blue-800">
+                  <strong>Tip:</strong> Use the{" "}
+                  <Link to="/ict-dashboard" className="font-medium underline">
+                    ICT Dashboard
+                  </Link>{" "}
+                  for queue management and ticket assignment.
                 </p>
-                <div className="mt-6 p-4 bg-green-50 rounded-lg border border-green-200">
-                  <p className="text-sm text-green-800">
-                    <strong>Phase 2 In Progress!</strong> Ticket management
-                    system is now available. You can create, view, and manage
-                    tickets.
-                  </p>
-                </div>
               </div>
+            )}
+            <div className="mt-4 p-4 bg-green-50 rounded-lg border border-green-200">
+              <p className="text-sm text-green-800">
+                <strong>Phase 3 Complete!</strong> ICT features including
+                ticket assignment, queue management, and status workflow are
+                now available.
+              </p>
+            </div>
+          </div>
             </>
           )}
         </div>

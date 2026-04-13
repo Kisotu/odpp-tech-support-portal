@@ -1,16 +1,23 @@
+import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useParams, useNavigate } from "react-router-dom";
 import { ticketService } from "../../services/ticketService";
+import { userService } from "../../services/userService";
+import { useAuthStore } from "../../store/authStore";
 import Badge, { StatusBadge, PriorityBadge } from "../common/Badge";
 import Button from "../common/Button";
 import Card, { CardHeader, CardTitle, CardBody } from "../common/Card";
 import Spinner from "../common/Spinner";
 import CommentSection from "./CommentSection";
+import AssignmentModal from "./AssignmentModal";
 
 export default function TicketDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const user = useAuthStore((state) => state.user);
+
+  const [showAssignmentModal, setShowAssignmentModal] = useState(false);
 
   const {
     data: ticket,
@@ -21,8 +28,31 @@ export default function TicketDetail() {
     queryFn: () => ticketService.getById(id),
   });
 
+  const { data: officersData, isLoading: officersLoading } = useQuery({
+    queryKey: ["ict-officers"],
+    queryFn: () => userService.getIctOfficers(),
+    enabled: user?.role === "ict_officer" || user?.role === "admin",
+  });
+
   const updateMutation = useMutation({
     mutationFn: (data) => ticketService.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["ticket", id] });
+      queryClient.invalidateQueries({ queryKey: ["tickets"] });
+    },
+  });
+
+  const assignMutation = useMutation({
+    mutationFn: (officerId) => ticketService.assign(id, officerId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["ticket", id] });
+      queryClient.invalidateQueries({ queryKey: ["tickets"] });
+      queryClient.invalidateQueries({ queryKey: ["ict-officers"] });
+    },
+  });
+
+  const reopenMutation = useMutation({
+    mutationFn: () => ticketService.reopen(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["ticket", id] });
       queryClient.invalidateQueries({ queryKey: ["tickets"] });
@@ -32,6 +62,16 @@ export default function TicketDetail() {
   const handleStatusChange = (newStatus) => {
     updateMutation.mutate({ status: newStatus });
   };
+
+  const handleReopen = () => {
+    reopenMutation.mutate();
+  };
+
+  const canManageTicket =
+    user?.role === "admin" ||
+    (user?.role === "ict_officer" && ticket?.assigned_to?.id === user?.id);
+
+  const canAssignTicket = user?.role === "admin" || user?.role === "ict_officer";
 
   if (isLoading) {
     return (
@@ -83,14 +123,28 @@ export default function TicketDetail() {
           <span>/</span>
           <span>Ticket #{ticket?.ticket_number}</span>
         </div>
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <h1 className="text-2xl font-bold text-gray-900">{ticket?.title}</h1>
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={() => navigate("/tickets")}>
-              Back to List
+<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <h1 className="text-2xl font-bold text-gray-900">{ticket?.title}</h1>
+        <div className="flex gap-2 flex-wrap">
+          <Button variant="outline" onClick={() => navigate("/tickets")}>
+            Back to List
+          </Button>
+          {canAssignTicket && (
+            <Button
+              variant="primary"
+              onClick={() => setShowAssignmentModal(true)}
+            >
+              {ticket?.assigned_to ? "Reassign" : "Assign"}
             </Button>
-          </div>
+          )}
+          {(ticket?.status === "resolved" || ticket?.status === "closed") &&
+            canManageTicket && (
+              <Button variant="warning" onClick={handleReopen}>
+                Reopen Ticket
+              </Button>
+            )}
         </div>
+      </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -250,26 +304,50 @@ export default function TicketDetail() {
             </CardBody>
           </Card>
 
-          {/* Quick Actions */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Quick Actions</CardTitle>
-            </CardHeader>
-            <CardBody className="space-y-2">
+{/* Quick Actions */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Quick Actions</CardTitle>
+        </CardHeader>
+        <CardBody className="space-y-3">
+          {canManageTicket ? (
+            <>
               <select
                 value={ticket?.status}
                 onChange={(e) => handleStatusChange(e.target.value)}
-                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-odpp-blue focus:border-odpp-blue sm:text-sm"
+                disabled={updateMutation.isPending}
+                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-odpp-blue focus:border-odpp-blue sm:text-sm disabled:bg-gray-100"
               >
                 <option value="new">New</option>
                 <option value="in_progress">In Progress</option>
                 <option value="resolved">Resolved</option>
                 <option value="closed">Closed</option>
               </select>
-            </CardBody>
-          </Card>
-        </div>
-      </div>
+              {updateMutation.isError && (
+                <p className="text-sm text-red-600">
+                  Failed to update status
+                </p>
+              )}
+            </>
+          ) : (
+            <p className="text-sm text-gray-500">
+              Only assigned ICT officers can update ticket status.
+            </p>
+          )}
+        </CardBody>
+      </Card>
     </div>
-  );
+  </div>
+
+  {/* Assignment Modal */}
+  <AssignmentModal
+    isOpen={showAssignmentModal}
+    onClose={() => setShowAssignmentModal(false)}
+    ticket={ticket}
+    officers={officersData || []}
+    isLoading={officersLoading}
+    onAssign={assignMutation.mutate}
+  />
+</div>
+);
 }

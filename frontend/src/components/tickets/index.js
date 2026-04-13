@@ -3,3 +3,4 @@ export { default as TicketForm } from './TicketForm';
 export { default as TicketDetail } from './TicketDetail';
 export { default as TicketFilters } from './TicketFilters';
 export { default as CommentSection } from './CommentSection';
+export { default as AssignmentModal } from './AssignmentModal';
