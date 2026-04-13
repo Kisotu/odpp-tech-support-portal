@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useParams, useNavigate } from "react-router-dom";
 import { ticketService } from "../../services/ticketService";
@@ -12,7 +11,6 @@ export default function TicketDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [isEditing, setIsEditing] = useState(false);
 
   const {
     data: ticket,
@@ -27,7 +25,6 @@ export default function TicketDetail() {
     mutationFn: (data) => ticketService.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries(["ticket", id]);
-      setIsEditing(false);
     },
   });
 
