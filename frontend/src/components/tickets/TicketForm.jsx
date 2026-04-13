@@ -1,62 +1,62 @@
-import { useState } from 'react';
-import Input from '../common/Input';
-import Select from '../common/Select';
-import Button from '../common/Button';
+import { useState } from "react";
+import Input from "../common/Input";
+import Select from "../common/Select";
+import Button from "../common/Button";
 
 const priorityOptions = [
-  { value: 'low', label: 'Low' },
-  { value: 'medium', label: 'Medium' },
-  { value: 'high', label: 'High' },
-  { value: 'urgent', label: 'Urgent' },
+  { value: "low", label: "Low" },
+  { value: "medium", label: "Medium" },
+  { value: "high", label: "High" },
+  { value: "critical", label: "Critical" },
 ];
 
 const categoryOptions = [
-  { value: 'hardware', label: 'Hardware' },
-  { value: 'software', label: 'Software' },
-  { value: 'network', label: 'Network' },
-  { value: 'email', label: 'Email' },
-  { value: 'account', label: 'Account Access' },
-  { value: 'other', label: 'Other' },
+  { value: "hardware", label: "Hardware" },
+  { value: "software", label: "Software" },
+  { value: "network", label: "Network" },
+  { value: "printer", label: "Printer" },
+  { value: "email", label: "Email" },
+  { value: "other", label: "Other" },
 ];
 
 export default function TicketForm({
   initialData = {},
   onSubmit,
   loading = false,
-  isEdit = false
+  isEdit = false,
 }) {
   const [formData, setFormData] = useState({
-    title: initialData.title || '',
-    description: initialData.description || '',
-    priority: initialData.priority || 'medium',
-    category: initialData.category || '',
-    location: initialData.location || '',
-    contact_phone: initialData.contact_phone || '',
+    title: initialData.title || "",
+    description: initialData.description || "",
+    priority: initialData.priority || "medium",
+    category: initialData.category || "",
+    location: initialData.location || "",
+    contact_phone: initialData.contact_phone || "",
   });
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
     if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
+      setErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
   const validate = () => {
     const newErrors = {};
     if (!formData.title.trim()) {
-      newErrors.title = 'Title is required';
+      newErrors.title = "Title is required";
     } else if (formData.title.length < 10) {
-      newErrors.title = 'Title must be at least 10 characters';
+      newErrors.title = "Title must be at least 10 characters";
     }
     if (!formData.description.trim()) {
-      newErrors.description = 'Description is required';
+      newErrors.description = "Description is required";
     } else if (formData.description.length < 20) {
-      newErrors.description = 'Description must be at least 20 characters';
+      newErrors.description = "Description must be at least 20 characters";
     }
     if (!formData.category) {
-      newErrors.category = 'Please select a category';
+      newErrors.category = "Please select a category";
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -82,7 +82,10 @@ export default function TicketForm({
       />
 
       <div>
-        <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+        <label
+          htmlFor="description"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
           Description <span className="text-odpp-red">*</span>
         </label>
         <textarea
@@ -94,8 +97,8 @@ export default function TicketForm({
           placeholder="Detailed description of the issue..."
           className={`block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none sm:text-sm ${
             errors.description
-              ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
-              : 'border-gray-300 focus:ring-odpp-blue focus:border-odpp-blue'
+              ? "border-red-300 focus:ring-red-500 focus:border-red-500"
+              : "border-gray-300 focus:ring-odpp-blue focus:border-odpp-blue"
           }`}
           required
         />
@@ -146,11 +149,15 @@ export default function TicketForm({
       </div>
 
       <div className="flex justify-end space-x-3">
-        <Button type="button" variant="secondary" onClick={() => window.history.back()}>
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={() => window.history.back()}
+        >
           Cancel
         </Button>
         <Button type="submit" variant="primary" loading={loading}>
-          {isEdit ? 'Update Ticket' : 'Submit Ticket'}
+          {isEdit ? "Update Ticket" : "Submit Ticket"}
         </Button>
       </div>
     </form>
