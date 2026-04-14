@@ -1,18 +1,18 @@
 import { forwardRef } from 'react';
 
 const variants = {
-  primary: 'bg-odpp-blue hover:bg-blue-800 text-white focus:ring-odpp-blue',
-  secondary: 'bg-gray-200 hover:bg-gray-300 text-gray-800 focus:ring-gray-400',
-  danger: 'bg-odpp-red hover:bg-red-700 text-white focus:ring-odpp-red',
-  success: 'bg-odpp-green hover:bg-green-700 text-white focus:ring-odpp-green',
-  warning: 'bg-odpp-amber hover:bg-amber-600 text-white focus:ring-odpp-amber',
-  outline: 'bg-white border-2 border-odpp-blue text-odpp-blue hover:bg-odpp-blue hover:text-white focus:ring-odpp-blue',
+  primary: 'text-white shadow-sm hover:shadow-md',
+  secondary: 'bg-gray-200 hover:bg-gray-300 text-gray-800 focus:ring-gray-400 shadow-sm',
+  danger: 'bg-odpp-red hover:bg-red-700 text-white focus:ring-odpp-red shadow-sm hover:shadow-md',
+  success: 'bg-odpp-green hover:bg-green-700 text-white focus:ring-odpp-green shadow-sm hover:shadow-md',
+  warning: 'bg-odpp-amber hover:bg-amber-600 text-white focus:ring-odpp-amber shadow-sm hover:shadow-md',
+  outline: 'bg-white border border-gray-300 shadow-sm',
   ghost: 'bg-transparent hover:bg-gray-100 text-gray-700 focus:ring-gray-400',
 };
 
 const sizes = {
-  sm: 'px-3 py-1.5 text-sm',
-  md: 'px-4 py-2 text-sm',
+  sm: 'px-3 py-2 text-sm',
+  md: 'px-4 py-2.5 text-sm',
   lg: 'px-6 py-3 text-base',
 };
 
@@ -27,7 +27,20 @@ const Button = forwardRef(({
   onClick,
   ...props
 }, ref) => {
-  const baseStyles = 'inline-flex items-center justify-center font-medium rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed';
+  const baseStyles = 'inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed hover:-translate-y-0.5 active:translate-y-0';
+  const variantStyle =
+    variant === 'primary'
+      ? {
+          backgroundColor: 'var(--accent-500)',
+          borderColor: 'var(--accent-500)',
+          '--tw-ring-color': 'var(--ui-ring)',
+        }
+      : variant === 'outline'
+      ? {
+          color: 'var(--accent-600)',
+          '--tw-ring-color': 'var(--ui-ring)',
+        }
+      : undefined;
 
   return (
     <button
@@ -36,6 +49,7 @@ const Button = forwardRef(({
       disabled={disabled || loading}
       onClick={onClick}
       className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`}
+      style={variantStyle}
       {...props}
     >
       {loading && (

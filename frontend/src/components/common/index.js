@@ -13,3 +13,4 @@ export { default as Modal } from "./Modal";
 export { default as Table, TableWithPagination } from "./Table";
 export { default as Spinner } from "./Spinner";
 export { default as Navigation } from "./Navigation";
+export { default as ThemeControls } from "./ThemeControls";

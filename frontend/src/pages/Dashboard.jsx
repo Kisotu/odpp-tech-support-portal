@@ -136,13 +136,6 @@ export default function Dashboard() {
                 </p>
               </div>
             )}
-            <div className="mt-4 p-4 bg-green-50 rounded-lg border border-green-200">
-              <p className="text-sm text-green-800">
-                <strong>Phase 3 Complete!</strong> ICT features including
-                ticket assignment, queue management, and status workflow are
-                now available.
-              </p>
-            </div>
           </div>
             </>
           )}

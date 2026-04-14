@@ -33,7 +33,7 @@ export default function Input({
         placeholder={placeholder}
         disabled={disabled}
         required={required}
-        className={`block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none sm:text-sm ${
+        className={`block w-full px-3 py-2.5 border rounded-xl shadow-sm focus:outline-none sm:text-sm transition-all duration-200 ${
           error
             ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
             : 'border-gray-300 focus:ring-odpp-blue focus:border-odpp-blue'

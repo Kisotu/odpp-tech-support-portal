@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useToastStore } from '../../store/toastStore';
 
 const icons = {
@@ -47,7 +46,7 @@ const iconColors = {
 
 function ToastItem({ toast, onRemove }) {
   return (
-    <div className={`flex items-start gap-3 p-4 rounded-lg border shadow-lg ${bgColors[toast.type]}`}>
+    <div className={`flex items-start gap-3 p-4 rounded-xl border shadow-lg animate-fade-in-up ${bgColors[toast.type]}`}>
       <div className={iconColors[toast.type]}>
         {icons[toast.type]}
       </div>
@@ -72,7 +71,7 @@ export default function Toast() {
   if (toasts.length === 0) return null;
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2 max-w-sm w-full">
+    <div className="fixed bottom-4 right-4 left-4 sm:left-auto z-50 flex flex-col gap-2 max-w-sm w-auto sm:w-full">
       {toasts.map((toast) => (
         <ToastItem key={toast.id} toast={toast} onRemove={removeToast} />
       ))}

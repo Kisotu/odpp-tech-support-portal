@@ -13,6 +13,8 @@ import KnowledgeBaseView from "./pages/KnowledgeBaseView";
 import KnowledgeBaseEditor from "./pages/KnowledgeBaseEditor";
 import ErrorBoundary from "./components/common/ErrorBoundary";
 import Toast from "./components/common/Toast";
+import { useEffect } from "react";
+import { useThemeStore } from "./store/themeStore";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -54,95 +56,103 @@ function HomeRedirect() {
 }
 
 function App() {
+  const initializeTheme = useThemeStore((state) => state.initializeTheme);
+
+  useEffect(() => {
+    initializeTheme();
+  }, [initializeTheme]);
+
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <Toast />
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/ict-dashboard"
-              element={
-                <RoleRoute allowedRoles={["ict_officer", "admin"]}>
-                  <ICTDashboard />
-                </RoleRoute>
-              }
-            />
-            <Route
-              path="/tickets"
-              element={
-                <ProtectedRoute>
-                  <Tickets />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/tickets/create"
-              element={
-                <ProtectedRoute>
-                  <CreateTicket />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/tickets/:id"
-              element={
-                <ProtectedRoute>
-                  <TicketView />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/reports"
-              element={
-                <RoleRoute allowedRoles={["ict_officer", "admin"]}>
-                  <Reports />
-                </RoleRoute>
-              }
-            />
-            <Route
-              path="/knowledge-base"
-              element={
-                <ProtectedRoute>
-                  <KnowledgeBase />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/knowledge-base/new"
-              element={
-                <RoleRoute allowedRoles={["ict_officer", "admin"]}>
-                  <KnowledgeBaseEditor />
-                </RoleRoute>
-              }
-            />
-            <Route
-              path="/knowledge-base/:id"
-              element={
-                <ProtectedRoute>
-                  <KnowledgeBaseView />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/knowledge-base/:id/edit"
-              element={
-                <RoleRoute allowedRoles={["ict_officer", "admin"]}>
-                  <KnowledgeBaseEditor />
-                </RoleRoute>
-              }
-            />
-            <Route path="/" element={<HomeRedirect />} />
-          </Routes>
+          <div className="theme-ready app-shell">
+            <Toast />
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/ict-dashboard"
+                element={
+                  <RoleRoute allowedRoles={["ict_officer", "admin"]}>
+                    <ICTDashboard />
+                  </RoleRoute>
+                }
+              />
+              <Route
+                path="/tickets"
+                element={
+                  <ProtectedRoute>
+                    <Tickets />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/tickets/create"
+                element={
+                  <ProtectedRoute>
+                    <CreateTicket />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/tickets/:id"
+                element={
+                  <ProtectedRoute>
+                    <TicketView />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/reports"
+                element={
+                  <RoleRoute allowedRoles={["ict_officer", "admin"]}>
+                    <Reports />
+                  </RoleRoute>
+                }
+              />
+              <Route
+                path="/knowledge-base"
+                element={
+                  <ProtectedRoute>
+                    <KnowledgeBase />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/knowledge-base/new"
+                element={
+                  <RoleRoute allowedRoles={["ict_officer", "admin"]}>
+                    <KnowledgeBaseEditor />
+                  </RoleRoute>
+                }
+              />
+              <Route
+                path="/knowledge-base/:id"
+                element={
+                  <ProtectedRoute>
+                    <KnowledgeBaseView />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/knowledge-base/:id/edit"
+                element={
+                  <RoleRoute allowedRoles={["ict_officer", "admin"]}>
+                    <KnowledgeBaseEditor />
+                  </RoleRoute>
+                }
+              />
+              <Route path="/" element={<HomeRedirect />} />
+            </Routes>
+          </div>
         </BrowserRouter>
       </QueryClientProvider>
     </ErrorBoundary>
