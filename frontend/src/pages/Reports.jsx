@@ -75,12 +75,12 @@ export default function Reports() {
     }
   };
 
-  const resolutionChartData =
-    resolutionData?.by_category?.map((item) => ({
-      category: item.category.charAt(0).toUpperCase() + item.category.slice(1),
-      avgHours: parseFloat(item.avg_hours?.toFixed(1) || 0),
-      tickets: item.ticket_count,
-    })) || [];
+const resolutionChartData =
+  resolutionData?.by_category?.map((item) => ({
+    category: item.category.charAt(0).toUpperCase() + item.category.slice(1),
+    avgHours: Number(item.avg_hours) ? parseFloat(Number(item.avg_hours).toFixed(1)) : 0,
+    tickets: item.ticket_count,
+  })) || [];
 
   const categoryChartData =
     categoryData?.by_category?.map((item) => ({
