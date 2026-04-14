@@ -1,180 +1,208 @@
 # ODPP Tech Support Portal
 
-A localized Help Desk system for the Office of the Director of Public Prosecutions (ODPP) Kenya.
+A full stack service desk platform tailored for the Office of the Director of Public Prosecutions (ODPP), Kenya.
 
-## Project Status
+This project is designed as a production minded portfolio application that demonstrates how to build internal government workflow systems with strong role based access control, operational reporting, and maintainable architecture.
 
-- ✅ **Phase 1: Foundation** - Complete
-- ✅ **Phase 2: Core Ticket System** - Complete
-- ✅ **Phase 3: ICT Features** - Complete
-- ✅ **Phase 4: Reporting & Knowledge Base** - Complete
-- ⏳ **Phase 5: Polish & Deployment** - Planned
+## Why This Project Stands Out
 
-## Project Structure
+- Solves a real operational problem: turns fragmented ICT issue handling into a structured, auditable support workflow.
+- Built as a complete product, not a demo page: authentication, ticket lifecycle management, reporting analytics, knowledge base, and deployment documentation.
+- Shows engineering maturity: clear separation of concerns, role aware UX and APIs, seeded realistic data, reusable frontend patterns, and defensive error handling.
+- Demonstrates end to end ownership: product planning in PRD, implementation across backend and frontend, and delivery artifacts for deployment and API consumption.
 
-```
+## Product Overview
+
+The ODPP Tech Support Portal enables staff to report IT issues and track progress, while ICT officers and admins manage triage, assignment, resolution, and service quality.
+
+Core capabilities:
+- Ticket submission with category, priority, location, contact, and attachments.
+- Role based workflows for staff, ICT officers, and admins.
+- Assignment and status transitions across new, in_progress, resolved, and closed states.
+- Internal and public comments for collaboration and communication.
+- ICT operations dashboard with queue visibility and workload context.
+- Reporting suite with SLA compliance, resolution trends, and CSV export.
+- Searchable knowledge base to reduce repeat tickets and improve self service.
+
+## Implementation Status
+
+- Phase 1: Foundation - Complete
+- Phase 2: Core Ticketing - Complete
+- Phase 3: ICT Workflow Features - Complete
+- Phase 4: Reporting and Knowledge Base - Complete
+- Phase 5: Polish and Deployment Preparation - Complete
+
+## Architecture
+
+High level flow:
+- Frontend: React SPA (Vite) handles routing, role aware views, forms, data visualization, and user feedback.
+- Backend: Laravel API exposes authenticated, role protected endpoints for all business operations.
+- Auth: Laravel Sanctum issues and validates bearer tokens.
+- Data: MySQL stores users, tickets, comments, attachments, audit history, and knowledge base articles.
+
+Project layout:
+
 .
-├── backend/           # Laravel API
-├── frontend/          # React + Vite frontend
-├── docs/              # Documentation
-└── PRD.md             # Product Requirements Document
-```
-
-## Quick Start
-
-### Prerequisites
-
-- PHP 8.2+
-- Composer
-- Node.js 18+
-- MySQL 8.0+
-
-### Backend Setup (Laravel)
-
-```bash
-cd backend
-
-# Install dependencies
-composer install
-
-# Copy environment file
-cp .env.example .env
-
-# Generate app key
-php artisan key:generate
-
-# Create MySQL database
-mysql -u root -e "CREATE DATABASE odpp_tech_support CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-
-# Run migrations
-php artisan migrate
-
-# Seed demo users
-php artisan db:seed
-
-# Start development server
-php artisan serve
-```
-
-### Frontend Setup (React + Vite)
-
-```bash
-cd frontend
-
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-```
-
-## Demo Credentials
-
-| Role | Email | Password |
-|------|-------|----------|
-| Admin | admin@odpp.go.ke | password |
-| ICT Officer | ict1@odpp.go.ke | password |
-| Staff | prosecutor@odpp.go.ke | password |
-
-## Features
-
-### Phase 1 (Complete)
-- ✅ User authentication (login/logout)
-- ✅ Role-based access (staff, ict_officer, admin)
-- ✅ Token-based API authentication
-- ✅ Protected routes
-- ✅ Dashboard with statistics
-
-### Phase 2 (Complete)
-- ✅ Ticket CRUD operations
-- ✅ Ticket creation form with validation
-- ✅ Ticket list with filters (status, category, priority, search)
-- ✅ Ticket detail view with comments
-- ✅ File attachment upload
-- ✅ Role-based ticket visibility
-- ✅ Dashboard statistics API
-- ✅ Reusable UI components
-
-### Phase 3 (Complete)
-- ✅ Ticket assignment system with modal UI
-- ✅ ICT Dashboard with queue view
-- ✅ Status workflow transitions with validation
-- ✅ Ticket reopen functionality
-- ✅ User management API
-- ✅ Role-based navigation
-- ✅ Role-based routing with guards
-
-### Phase 4 (Complete)
-- ✅ Reporting API with resolution times, SLA compliance, workload metrics
-- ✅ Reports page with charts (Recharts) for data visualization
-- ✅ Knowledge Base CRUD with article management
-- ✅ Article search and category filtering
-- ✅ CSV export for ticket data
-- ✅ Role-based access for report and knowledge base features
+|- backend/       Laravel 11 API, business logic, models, migrations, seeders
+|- frontend/      React 18 client with Tailwind, TanStack Query, Zustand
+|- docs/          API docs, deployment guide, implementation reports
+|- PRD.md         Product requirements and delivery milestones
+|- setup.sh       Local setup helper script
 
 ## Tech Stack
 
-**Backend:**
+Backend:
 - Laravel 11
-- Laravel Sanctum (API Authentication)
-- MySQL 8.0
+- Laravel Sanctum
+- MySQL 8+
+- Eloquent ORM
 
-**Frontend:**
+Frontend:
 - React 18
 - Vite
 - Tailwind CSS
 - React Router
 - TanStack Query
 - Zustand
-- Recharts (Charts & Data Visualization)
+- Recharts
+- Axios
 
-## API Endpoints
+Dev and quality tooling:
+- Composer
+- npm
+- ESLint
+- PHPUnit
 
-### Authentication
-- `POST /api/auth/login` - User login
-- `POST /api/auth/logout` - User logout
-- `GET /api/auth/user` - Get current user
+## Key Engineering Highlights
 
-### Tickets
-- `GET /api/tickets` - List tickets (with filters)
-- `POST /api/tickets` - Create ticket
-- `GET /api/tickets/{id}` - Get single ticket
-- `PUT /api/tickets/{id}` - Update ticket
-- `DELETE /api/tickets/{id}` - Delete ticket
-- `POST /api/tickets/{id}/assign` - Assign ticket
-- `POST /api/tickets/{id}/status` - Update status
-- `POST /api/tickets/{id}/reopen` - Reopen ticket
-- `GET /api/tickets/{id}/comments` - Get comments
-- `POST /api/tickets/{id}/comments` - Add comment
-- `POST /api/tickets/{id}/attachments` - Upload file
+### 1) Role Driven Security Model
+- Distinct role behavior for staff, ICT officers, and admins.
+- Protected routes and role guards in frontend navigation.
+- API level authorization to enforce access policies server side.
 
-### Users
-- `GET /api/users` - List users (ict/admin only)
-- `POST /api/users` - Create user (admin only)
-- `GET /api/users/{id}` - Get user
-- `PUT /api/users/{id}` - Update user (admin only)
-- `DELETE /api/users/{id}` - Deactivate user (admin only)
-- `GET /api/users/role/ict-officers` - List ICT officers
+### 2) Realistic Service Desk Workflow
+- Purpose built ticket status transitions with reopen support.
+- Assignment flow for ICT queue ownership.
+- Comments and attachments to keep ticket context centralized.
 
-### Dashboard
-- `GET /api/dashboard/stats` - Get statistics
-- `GET /api/dashboard/trends` - Get trends
-- `GET /api/dashboard/performance` - Get performance metrics
+### 3) Operational Analytics
+- Resolution time insights by category.
+- SLA compliance tracking by priority bands.
+- Officer workload and throughput visibility.
+- Export endpoints for offline reporting and management review.
 
-### Reports (ict/admin only)
-- `GET /api/reports/resolution-times` - Resolution time by category
-- `GET /api/reports/by-category` - Ticket counts by category/status
-- `GET /api/reports/sla-compliance` - SLA compliance metrics
-- `GET /api/reports/officer-workload` - ICT officer performance
-- `GET /api/reports/export-csv` - Export tickets to CSV
+### 4) Production Readiness Practices
+- Idempotent seeders for repeatable local setup.
+- Rich seed datasets for tickets and knowledge base content.
+- Global error boundary and toast notifications for resilient UX.
+- Deployment and operations playbook with queue worker and backup strategy.
 
-### Knowledge Base
-- `GET /api/knowledge-base` - List articles (with search/filter)
-- `POST /api/knowledge-base` - Create article (ict/admin only)
-- `GET /api/knowledge-base/categories` - Get categories
-- `GET /api/knowledge-base/{id}` - Get article
-- `PUT /api/knowledge-base/{id}` - Update article (ict/admin only)
-- `DELETE /api/knowledge-base/{id}` - Delete article (admin only)
+## Documentation
+
+- Full API reference: [docs/API_DOCUMENTATION.md](docs/API_DOCUMENTATION.md)
+- Deployment runbook: [docs/DEPLOYMENT_GUIDE.md](docs/DEPLOYMENT_GUIDE.md)
+- Phase 1 and 2 issue resolution report: [docs/PHASE_1_2_ERROR_REPORT.md](docs/PHASE_1_2_ERROR_REPORT.md)
+- Product requirements: [PRD.md](PRD.md)
+
+## Quick Start
+
+Prerequisites:
+- PHP 8.2+
+- Composer
+- Node.js 18+
+- MySQL 8+
+
+Option A: one command setup
+
+Run from project root:
+
+```bash
+bash setup.sh
+```
+
+Option B: manual setup
+
+Backend:
+
+```bash
+cd backend
+composer install
+cp .env.example .env
+php artisan key:generate
+
+mysql -u root -e "CREATE DATABASE odpp_tech_support CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+
+php artisan migrate
+php artisan db:seed
+php artisan serve
+```
+
+Frontend:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Default local URLs:
+- Backend API: http://localhost:8000
+- Frontend app: http://localhost:5173
+
+## Demo Accounts
+
+All seeded users use the password value shown below:
+
+| Role | Email | Password |
+|---|---|---|
+| Admin | admin@odpp.go.ke | password |
+| ICT Officer | ict1@odpp.go.ke | password |
+| ICT Officer | ict2@odpp.go.ke | password |
+| Staff | prosecutor@odpp.go.ke | password |
+
+## API Surface (Summary)
+
+Authentication:
+- POST /api/auth/login
+- POST /api/auth/logout
+- GET /api/auth/user
+
+Tickets:
+- CRUD for tickets
+- Assignment endpoint
+- Status transition endpoint
+- Reopen endpoint
+- Comments and attachment endpoints
+
+Reports:
+- Resolution times
+- Category breakdown
+- SLA compliance
+- Officer workload
+- CSV export
+
+Knowledge Base:
+- Article CRUD
+- Search and category filters
+- Category enumeration endpoint
+
+For request and response examples, see [docs/API_DOCUMENTATION.md](docs/API_DOCUMENTATION.md).
+
+## Portfolio Value
+
+This repository demonstrates that I can:
+- Translate business requirements into a delivery roadmap.
+- Build secure, role aware backend APIs and modern frontend clients.
+- Design systems for both end users and operational stakeholders.
+- Produce delivery quality documentation expected in professional teams.
+- Ship features iteratively while preserving maintainability.
+
+## Suggested Next Enhancements
+
+- Add automated tests for core role based scenarios and ticket transitions.
+- Add CI pipeline for lint, tests, and build validation.
+- Add observability hooks (structured logs, metrics, health checks).
+- Add email and in app notification workflows for assignment and status updates.
 
 ## License
 
