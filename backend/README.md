@@ -1,58 +1,107 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# ODPP Tech Support - Backend 🚀
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+[![Laravel 11](https://img.shields.io/badge/Laravel-11-FF2D20?style=for-the-badge&logo=laravel)](https://laravel.com)
+[![PHP 8.2+](https://img.shields.io/badge/PHP-8.2%2B-777BB4?style=for-the-badge&logo=php)](https://www.php.net)
+[![MySQL 8](https://img.shields.io/badge/Database-MySQL%208-4479A1?style=for-the-badge&logo=mysql)](https://www.mysql.com)
+[![Sanctum](https://img.shields.io/badge/Auth-Sanctum-EB4432?style=for-the-badge)](https://laravel.com/docs/sanctum)
 
-## About Laravel
+The Laravel 11-powered REST API for the **ODPP Tech Support Portal**. This backend handles all business logic, authentication, ticket lifecycle management, and reporting for the service desk platform.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🛠️ Core Capabilities
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **🔐 Robust Auth**: Token-based authentication using Laravel Sanctum with specific role-based access levels (`staff`, `ict`, `admin`).
+- **🎫 Ticket Engine**: Complex ticket lifecycle state machine supporting file attachments and internal/public comments.
+- **📚 Knowledge Management**: API for creating, managing, and searching support articles.
+- **📈 Analytics API**: Aggregated data endpoints for SLA compliance, resolution times, and team throughput.
+- **📜 Audit Logging**: Transparent tracking of all sensitive actions within the ticket lifecycle.
+- **📦 Data Seeding**: Rich, idempotent seeders that populate the system with realistic historical ticket data for testing.
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 🏗️ Project Structure
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
-```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+```text
+backend/
+├── 📂 app/
+│   ├── 📂 Http/Controllers/Api/ # Resource controllers (Ticket, Auth, Reports)
+│   ├── 📂 Models/               # Eloquent Models (Ticket, User, Comment, AuditLog)
+│   └── 📂 Providers/            # Application service providers
+├── 📂 database/
+│   ├── 📂 migrations/           # Ticket, KB, and Audit log table definitions
+│   └── 📂 seeders/              # Realistic dataset generators
+├── 📂 routes/
+│   └── 📄 api.php               # Protected & public API definitions
+├── 📂 tests/
+│   └── 📂 Feature/              # Integration tests for key workflows
+└── 📄 artisan                   # Laravel CLI tool
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+---
 
-## Contributing
+## 🚀 Setup & Installation
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Prerequisites
+- PHP 8.2+
+- Composer
+- MySQL 8.0+
 
-## Code of Conduct
+### Installation
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+1.  **Install Dependencies**:
+    ```bash
+    composer install
+    ```
 
-## Security Vulnerabilities
+2.  **Environment Setup**:
+    ```bash
+    cp .env.example .env
+    php artisan key:generate
+    ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+3.  **Database Configuration**:
+    Update `.env` with your DB credentials:
+    ```env
+    DB_CONNECTION=mysql
+    DB_HOST=127.0.0.1
+    DB_PORT=3306
+    DB_DATABASE=odpp_support
+    DB_USERNAME=root
+    DB_PASSWORD=
+    ```
 
-## License
+4.  **Run Migrations & Seeders**:
+    ```bash
+    php artisan migrate --seed
+    ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+5.  **Start Server**:
+    ```bash
+    php artisan serve
+    ```
+
+---
+
+## 📖 API Documentation
+
+The API endpoints are documented with their expected payloads and responses.
+- 📑 [View Full API Docs](../docs/API_DOCUMENTATION.md)
+
+### Key Endpoints
+- `POST /api/login` - Authenticate and receive Sanctum token.
+- `GET /api/tickets` - List tickets (filtered by role).
+- `POST /api/tickets` - Submit a new support request.
+- `GET /api/reports/sla` - Retrieve SLA compliance statistics.
+
+---
+
+## ✅ Best Practices Implemented
+
+1.  **Form Request Validation**: Centralized validation rules for all incoming requests.
+2.  **API Resources**: Consistent JSON response formatting and data transformation.
+3.  **Eloquent Relationships**: Optimized queries using eager loading for comments, users, and attachments.
+4.  **Transaction Management**: Ensuring data integrity during multi-step ticket updates.
+
+---
+*Part of the ODPP Tech Support Portal project.*
